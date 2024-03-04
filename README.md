@@ -77,7 +77,7 @@ dot.to_flat_dict()
 {'very.deeply.nested.thing': 'spam', 'very.deeply.spam': 'indeed'}
 ```
 
-More examples can be found in the [examples](examples) directory.
+More examples can be found in the [examples](https://github.com/01Joseph-Hwang10/dotty-dictionary/tree/master/examples) directory.
 
 > [!NOTE]\
 > Using integer in dictionary keys will be treated as embedded list index.
