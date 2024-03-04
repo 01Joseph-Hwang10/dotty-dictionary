@@ -17,7 +17,7 @@
 - Two wrappers with the same dict are considered equal
 - Access to deeply nested keys with dot notation: dot['deeply.nested.key']
 - Create, read, update and delete nested keys of any length
-- Expose major dictionary methods like: `.get`, `.pop`, `.keys`, `.values`, `.items`, `.update`, `.clear`, `.copy`
+- Expose all dictionary methods like .get, .pop, .keys and other
 - Access dicts in lists by index dot['parents.0.first_name']
 - key=value caching to speed up lookups and low down memory consumption
 - support for setting value in multidimensional lists
@@ -45,7 +45,7 @@ You can start with empty dotty
 
 ```py
 from dotty_dict import dotty
-dot = dotty()
+dot = dotty() # Alias: `Dotty.empty()`
 dot['very.deeply.nested.thing'] = 'spam'
 dot
 Dotty(dictionary={'very': {'deeply': {'nested': {'thing': 'spam'}}}}, separator='.', esc_char='\\')
@@ -60,6 +60,18 @@ Dotty(dictionary={'very': {'deeply': {'spam': 'indeed'}}}, separator='.', esc_ch
 
 dot.get('very.not_existing.key')
 None
+```
+
+You can utilize `to_flat_dict` and `from_flat_dict` to convert dotty to and from flat dictionary.
+
+```py
+from dotty_dict import Dotty
+dot = Dotty.from_flat_dict({'very.deeply.nested.thing': 'spam', 'very.deeply.spam': 'indeed'})
+dot
+Dotty(dictionary={'very': {'deeply': {'nested': {'thing': 'spam'}, 'spam': 'indeed'}}}, separator='.', esc_char='\\')
+
+dot.to_flat_dict()
+{'very.deeply.nested.thing': 'spam', 'very.deeply.spam': 'indeed'}
 ```
 
 More examples can be found in the [examples](examples) directory.

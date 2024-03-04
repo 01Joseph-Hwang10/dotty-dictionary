@@ -67,9 +67,6 @@ class Dotty:
     def __iter__(self):
         return iter(self._data)
 
-    def __getattr__(self, item):
-        return getattr(self._data, item)
-
     def __contains__(self, item):
         def search_in(items: list, data: dict) -> bool:
             """Recursively search for deep key in dict.
