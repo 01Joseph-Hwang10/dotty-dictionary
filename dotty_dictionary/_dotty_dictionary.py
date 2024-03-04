@@ -1,5 +1,4 @@
 import json
-from collections.abc import Mapping
 from typing import Any, Iterable
 from ._dotty_encoder import DottyEncoder
 
@@ -8,7 +7,7 @@ __copyright__ = "Copyright (c) 2024, Joseph Hwang. Originally written by Pawel Z
 
 
 class Dotty:
-    """Dictionary and dict-like objects wrapper.
+    """Dictionary object wrapper with dot notation access.
 
     Dotty wraps dictionary and provides proxy for quick accessing to deeply
     nested keys and values using dot notation.
@@ -30,15 +29,18 @@ class Dotty:
 
     def __init__(
         self,
-        dictionary: Mapping,
+        dictionary: dict[str, Any],
         separator: str = ".",
         esc_char: str = "\\",
         no_list: bool = False,
     ):
-        if not isinstance(dictionary, Mapping):
+        if not isinstance(
+            dictionary,
+            dict[str, Any],
+        ):
             raise AttributeError("Dictionary must be type of dict")
         else:
-            self._data: Mapping = dictionary
+            self._data: dict[str, Any] = dictionary
         self.separator = separator
         self.esc_char = esc_char
         self.no_list = no_list
@@ -56,7 +58,7 @@ class Dotty:
     def __hash__(self):
         return hash(str(self))
 
-    def __eq__(self, other: Mapping):
+    def __eq__(self, other: dict):
         try:
             return sorted(self._data.items()) == sorted(other.items())
         except AttributeError:
@@ -64,6 +66,9 @@ class Dotty:
 
     def __len__(self):
         return len(self._data)
+
+    def __iter__(self):
+        return iter(self._data)
 
     def __getattr__(self, item):
         return getattr(self._data, item)
@@ -250,6 +255,9 @@ class Dotty:
         else:
             data[int(index)] = value
 
+    def clear(self):
+        self._data.clear()
+
     def get(self, key: str, default: Any = None) -> Any:
         """Get value from deep key or default if key does not exist.
 
@@ -267,6 +275,22 @@ class Dotty:
             return self.__getitem__(key)
         except (KeyError, IndexError):
             return default
+
+    def keys(self):
+        """Returns the keys of the category structure.
+
+        Returns:
+            The keys of the category structure.
+        """
+        return self._data.keys()
+
+    def items(self):
+        """Returns the items of the category structure.
+
+        Returns:
+            The items of the category structure.
+        """
+        return self._data.items()
 
     def pop(self, key: str, default: Any = None) -> Any:
         """Pop key from Dotty.
@@ -336,6 +360,17 @@ class Dotty:
             Wrapped dictionary as json string
         """
         return json.dumps(self._data, cls=DottyEncoder)
+
+    def update(self, data: dict[str, Any]):
+        self._data.update(data)
+
+    def values(self):
+        """Returns the values of the category structure.
+
+        Returns:
+            The values of the category structure.
+        """
+        return self._data.values()
 
     @staticmethod
     def _find_data_type(item: Any, data: dict) -> Any:
