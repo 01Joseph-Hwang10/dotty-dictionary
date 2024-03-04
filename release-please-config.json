@@ -3,7 +3,7 @@
     ".": {
       "release-type": "python",
       "changelog-path": "CHANGELOG.md",
-      "package-name": "yaml-replace",
+      "package-name": "dotty-dictionary",
       "bump-minor-pre-major": false,
       "bump-patch-for-minor-pre-major": false,
       "draft": false,
