@@ -144,7 +144,6 @@ class Dotty:
             """
             it = items.pop(0)
             if items:
-
                 if items[0].isdigit():
                     next_item = []
                 else:

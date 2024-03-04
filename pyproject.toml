@@ -41,6 +41,7 @@ extend-exclude = "/(\n  # The following are specific to Black, you probably don'
 test = "python -m pytest"
 lint = "flake8 dotty_dictionary tests"
 check-format = "black dotty_dictionary tests --check"
+format = "black dotty_dictionary tests"
 
 [tool.poetry.dependencies]
 python = ">=3.10,<4.0"
