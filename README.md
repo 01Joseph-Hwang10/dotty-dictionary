@@ -9,7 +9,7 @@
 
 `dotty-dictionary` is a Python library that provides a dictionary-like object that allows you to access nested dictionaries using dot notation.
 
-`dotty-dictionary` is a fork of [pawelzny/dotty-dict](https://github.com/pawelzny/dotty_dict) that provides additional features and improvements.
+`dotty-dictionary` is a fork of [pawelzny/dotty_dict](https://github.com/pawelzny/dotty_dict) that provides additional features and improvements.
 
 ## Features
 
