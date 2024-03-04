@@ -43,10 +43,10 @@ class Dotty:
         self.no_list = no_list
 
     def __repr__(self):
-        return "Dotty(dictionary={}, separator={!r}, esc_char={!r})".format(
-            self._data,
-            self.separator,
-            self.esc_char,
+        return (
+            f"Dotty(dictionary={self._data}), "
+            f"separator={repr(self.separator)}, "
+            f"esc_char={repr(self.esc_char)})"
         )
 
     def __str__(self):
@@ -218,6 +218,22 @@ class Dotty:
         return Dotty({}, *args, **kwargs)
 
     @staticmethod
+    def from_flat_dict(data: dict, *args, **kwargs) -> "Dotty":
+        """Create Dotty instance from flat dictionary.
+
+        Parameters:
+            data: Flat dictionary
+            separator: Character used to chain deep access
+
+        Returns:
+            Dotty instance
+        """
+        dotty = Dotty({}, *args, **kwargs)
+        for k, v in data.items():
+            dotty[k] = v
+        return dotty
+
+    @staticmethod
     def fromkeys(seq: Iterable[str], value: Any = None) -> "Dotty":
         """Create a new dictionary with keys from seq and values set to value.
 
@@ -347,6 +363,48 @@ class Dotty:
             Wrapped dictionary
         """
         return json.loads(self.to_json())
+
+    def to_flat_dict(self, no_list: bool | None = None) -> dict:
+        """Return wrapped dictionary as flat dictionary.
+
+        Parameters:
+            no_list: If set to True then numeric keys will NOT be converted to list indices
+                     In other words, list values will be given as is.
+                     Defaults to the value set in the constructor.
+
+        Returns:
+            Wrapped dictionary as flat dictionary
+        """
+        if no_list is None:
+            no_list = self.no_list
+
+        def flatten(d: dict, parent_key: str = ""):
+            items = []
+            for k, v in d.items():
+                new_key = f"{parent_key}{self.separator}{k}" if parent_key else k
+                if isinstance(v, dict):
+                    items.extend(flatten(v, new_key).items())
+                elif isinstance(v, list) and not no_list:
+                    for i, item in enumerate(v):
+                        items.extend(flatten({str(i): item}, new_key).items())
+                else:
+                    items.append((new_key, v))
+            return dict(items)
+
+        return flatten(self.to_dict())
+
+    def to_flat_json(self, no_list: bool | None = None) -> str:
+        """Return wrapped dictionary as flat json string.
+
+        Parameters:
+            no_list: If set to True then numeric keys will NOT be converted to list indices
+                     In other words, list values will be given as is.
+                     Defaults to the value set in the constructor.
+
+        Returns:
+            Wrapped dictionary as flat json string
+        """
+        return json.dumps(self.to_flat_dict(no_list))
 
     def to_json(self) -> str:
         """Return wrapped dictionary as json string.
