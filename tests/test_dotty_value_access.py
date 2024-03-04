@@ -264,3 +264,12 @@ def test_non_standard_key_types(dot):
     assert dict_bool == "bool"
     assert dict_none == "None"
     assert nested_dict_float == "nested_float"
+
+
+def test_iter_for_loop(dot):
+    for key in dot:
+        assert key in dot
+
+
+def test_iter_list_comprehension(dot):
+    assert list(dot) == ["flat_key", "deep"]
