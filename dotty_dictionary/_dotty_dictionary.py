@@ -3,6 +3,9 @@ from collections.abc import Mapping
 from typing import Any, Iterable
 from ._dotty_encoder import DottyEncoder
 
+__authors__ = ["Joseph Hwang", "Pawel Zadrozny"]
+__copyright__ = "Copyright (c) 2024, Joseph Hwang. Originally written by Pawel Zadrozny"
+
 
 class Dotty:
     """Dictionary and dict-like objects wrapper.
@@ -204,6 +207,15 @@ class Dotty:
         )
 
     @staticmethod
+    def empty(*args, **kwargs) -> "Dotty":
+        """Create empty Dotty instance.
+
+        Returns:
+            Empty Dotty instance
+        """
+        return Dotty({}, *args, **kwargs)
+
+    @staticmethod
     def fromkeys(seq: Iterable[str], value: Any = None) -> "Dotty":
         """Create a new dictionary with keys from seq and values set to value.
 
@@ -216,7 +228,7 @@ class Dotty:
         Returns:
             Dotty instance
         """
-        return DottyEncoder(dict.fromkeys(seq, value))
+        return Dotty(dict.fromkeys(seq, value))
 
     @staticmethod
     def set_list_index(
