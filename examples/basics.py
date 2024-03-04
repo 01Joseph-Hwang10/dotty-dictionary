@@ -1,5 +1,13 @@
-#!/usr/bin/env python
-# -*- coding: utf-8 -*-
+"""
+******
+Basics
+******
+
+The easiest way to use Dotty dictionary is with function factory.
+Factory takes only one, optional dictionary as argument.
+
+If leaved empty, factory function will create new, empty dictionary.
+"""
 
 __authors__ = ["Joseph Hwang", "Pawel Zadrozny"]
 __copyright__ = "Copyright (c) 2024, Joseph Hwang. Originally written by Pawel Zadrozny"
@@ -45,6 +53,9 @@ def create_new_dotty():
 
 
 def builtin_methods():
+    """Dotty exposes all native to dict, builtin methods.
+    Only change is made to method which uses key as input to accept dot notation.
+    """
     from dotty_dictionary import dotty
 
     dot = dotty(

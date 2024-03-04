@@ -1,11 +1,28 @@
-#!/usr/bin/env python
-# -*- coding: utf-8 -*-
+"""
+********
+Advanced
+********
+
+Lets simulate more real scenario. API requests and responses are often very complex
+with many deeply nested keys. And when you need to check one of them it may
+looks like: ``res.get('data', {}).get('service', {}).get('status', {}).get('current', False)``.
+
+**It's awful!** All this empty dictionary fallback to dig in for current status!
+"""
 
 __authors__ = ["Joseph Hwang", "Pawel Zadrozny"]
 __copyright__ = "Copyright (c) 2024, Joseph Hwang. Originally written by Pawel Zadrozny"
 
 
 def api_request():
+    """
+    Make API request
+    ================
+
+    In this scenario we will send post request to create new user with superuser privileges.
+    Below there is example response as dictionary, and then the way to check granted privileges.
+    """
+
     def make_request(payload):
         """Fake request for example purpose.
 
@@ -60,6 +77,12 @@ def api_request():
 
 
 def list_embedded():
+    """
+    Access dict with embedded lists
+    ===============================
+
+    This scenario shows how to access subfield in a list.
+    """
     from dotty_dictionary import dotty
 
     # dotty supports embedded lists
@@ -97,6 +120,12 @@ def list_embedded():
 
 
 def list_slices():
+    """
+    Access multiple fields with list slices
+    =======================================
+
+    This scenario shows how to access multiple subfields in a list of dicts.
+    """
     from dotty_dictionary import dotty
 
     # dotty supports standard Python slices for lists
@@ -120,6 +149,12 @@ def list_slices():
 
 
 def no_list_flag():
+    """
+    Access numeric fields as dict keys
+    ==================================
+
+    This scenario shows how to access numeric keys which should not be treated as list indices.
+    """
     from dotty_dictionary import dotty
 
     # For special use cases dotty supports dictionary key only access
@@ -135,6 +170,13 @@ def no_list_flag():
 
 
 def escape_character():
+    """
+    Escape character
+    =================
+
+    In some cases we want to preserve dot in key name and do not treat it
+    as keys separator. It can by done with escape character.
+    """
     from dotty_dictionary import dotty
 
     dot = dotty(
@@ -154,6 +196,17 @@ def escape_character():
 
 
 def escape_the_escape_character():
+    """
+    Escape the escape character
+    ===========================
+
+    What if escape character should be preserved as integral key name,
+    but it happens to be placed right before separator character?
+
+    The answer is: Escape the escape character.
+
+    .. warning:: Be careful because backslashes in Python require special treatment.
+    """
     from dotty_dictionary import dotty
 
     dot = dotty(

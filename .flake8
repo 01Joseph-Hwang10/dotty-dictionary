@@ -9,7 +9,7 @@ exclude =
     .venv,
     .mypy_cache
 max-complexity = 10
-max-line-length = 108
+max-line-length = 116
 ignore = 
     W291,
     E231,
