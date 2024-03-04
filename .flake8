@@ -1,0 +1,17 @@
+[flake8]
+exclude =
+    .git,
+    __pycache__,
+    docs/source/conf.py,
+    old,
+    build,
+    dist,
+    .venv,
+    .mypy_cache
+max-complexity = 10
+max-line-length = 108
+ignore = 
+    W291,
+    E231,
+    W503
+    
