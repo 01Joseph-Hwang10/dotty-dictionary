@@ -19,16 +19,19 @@
 - Create, read, update and delete nested keys of any length
 - Expose all dictionary methods like .get, .pop, .keys and other
 - Access dicts in lists by index dot['parents.0.first_name']
-- key=value caching to speed up lookups and low down memory consumption
-- support for setting value in multidimensional lists
-- support for accessing lists with slices
-- support for flattening nested dictionary keys from a dotty dictionary and vice versa
+- Support for setting value in multidimensional lists
+- Support for accessing lists with slices
+- Support for flattening nested dictionary keys from a dotty dictionary and vice versa
+- Support for iteration over nested dictionary keys (e.g. `for key in dotty_dict_instance`)
 
 ## Installation
 
 ```bash
 pip install dotty-dictionary
 ```
+
+- Package: <https://pypi.org/project/dotty-dictionary>
+- Source: <https://github.com/01Joseph-Hwang10/dotty-dictionary>
 
 ## Quick Example
 
