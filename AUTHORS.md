@@ -15,7 +15,7 @@ If you are original author (i.e. Pawel Zadrozny) and you want to take over this 
 
 * Pawel Zadrozny @pawelzny <pawel.zny@gmail.com>
 
-## Contributors of this fork
+## Contributors (from [pawelzny/dotty_dict](https://github.com/pawelzny/dotty_dict))
 
 * Linus Groh @linusg
 * Andreas Motl @amotl
