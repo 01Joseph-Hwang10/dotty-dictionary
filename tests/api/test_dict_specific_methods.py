@@ -198,3 +198,33 @@ def test_fromkeys(dot):
     dot = dotty().fromkeys({"a", "b", "c"}, value=10)
     assert dot.to_dict() == {"a": 10, "b": 10, "c": 10}
     assert isinstance(dot, Dotty)
+
+
+def test_keys(dot):
+    assert dot.keys() == {"flat_key", "deep"}
+
+
+def test_values(dot):
+    assert sorted(dot.values(), key=str) == sorted(["flat value", dot["deep"]], key=str)
+
+
+def test_items(dot):
+    assert sorted(dot.items(), key=str) == sorted(
+        [("flat_key", "flat value"), ("deep", dot["deep"])],
+        key=str,
+    )
+
+
+def test_update(dot):
+    update_dict = {"a": 1, "b": {"c": "d", "e": ["f", "g"]}}
+    dot.update(update_dict)
+    assert dot.to_dict() == {
+        **update_dict,
+        "flat_key": "flat value",
+        "deep": dot["deep"],
+    }
+
+
+def test_clear(dot):
+    dot.clear()
+    assert dot.to_dict() == {}

@@ -34,10 +34,7 @@ class Dotty:
         esc_char: str = "\\",
         no_list: bool = False,
     ):
-        if not isinstance(
-            dictionary,
-            dict[str, Any],
-        ):
+        if not isinstance(dictionary, dict):
             raise AttributeError("Dictionary must be type of dict")
         else:
             self._data: dict[str, Any] = dictionary
