@@ -4,7 +4,7 @@ build-backend = "poetry.core.masonry.api"
 
 [tool.poetry]
 name = "dotty-dictionary"
-version = "1.2.0"
+version = "1.2.1"
 description = "Dictionary wrapper that provides dot notation access to nested dictionaries"
 authors = [
   "01Joseph-Hwang10 <joseph95501@gmail.com>",
