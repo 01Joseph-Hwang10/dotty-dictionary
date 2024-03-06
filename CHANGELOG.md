@@ -1,5 +1,14 @@
 # Changelog
 
+## [1.2.1](https://github.com/01Joseph-Hwang10/dotty-dictionary/compare/dotty-dictionary-v1.2.0...dotty-dictionary-v1.2.1) (2024-03-06)
+
+
+### Documentation
+
+* add docs for new features ([4b075ef](https://github.com/01Joseph-Hwang10/dotty-dictionary/commit/4b075ef283b26ee639feaebb8d8ed6096707b3f8))
+* add docs for new features ([4cdd4c9](https://github.com/01Joseph-Hwang10/dotty-dictionary/commit/4cdd4c9c8cd85fb7ac4da0618aafded341c0f5c2))
+* add docs for new features ([22f8f1c](https://github.com/01Joseph-Hwang10/dotty-dictionary/commit/22f8f1cf9c7bc2d4c667356fe7921f7d9e21bef6))
+
 ## [1.2.0](https://github.com/01Joseph-Hwang10/dotty-dictionary/compare/dotty-dictionary-v1.1.1...dotty-dictionary-v1.2.0) (2024-03-06)
 
 
