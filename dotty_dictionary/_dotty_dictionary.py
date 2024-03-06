@@ -400,7 +400,7 @@ class Dotty:
         Returns:
             Wrapped dictionary as flat json string
         """
-        return json.dumps(self.to_flat_dict(no_list))
+        return json.dumps(self.to_flat_dict(no_list), cls=DottyEncoder)
 
     def to_json(self) -> str:
         """Return wrapped dictionary as json string.
