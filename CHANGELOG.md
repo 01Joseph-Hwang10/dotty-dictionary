@@ -1,5 +1,17 @@
 # Changelog
 
+## [1.2.0](https://github.com/01Joseph-Hwang10/dotty-dictionary/compare/dotty-dictionary-v1.1.1...dotty-dictionary-v1.2.0) (2024-03-06)
+
+
+### Features
+
+* add custom types and json encoding logic ([3b28eb8](https://github.com/01Joseph-Hwang10/dotty-dictionary/commit/3b28eb89af11b98d41673135d49299ce4d9bc78a))
+
+
+### Documentation
+
+* custom types ([6ac052e](https://github.com/01Joseph-Hwang10/dotty-dictionary/commit/6ac052e0e516948aebb00d5d7706527cdf740fc6))
+
 ## [1.1.1](https://github.com/01Joseph-Hwang10/dotty-dictionary/compare/dotty-dictionary-v1.1.0...dotty-dictionary-v1.1.1) (2024-03-06)
 
 
