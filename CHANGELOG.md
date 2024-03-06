@@ -1,5 +1,18 @@
 # Changelog
 
+## [1.1.1](https://github.com/01Joseph-Hwang10/dotty-dictionary/compare/dotty-dictionary-v1.1.0...dotty-dictionary-v1.1.1) (2024-03-06)
+
+
+### Bug Fixes
+
+* to_flat_json ([74620c1](https://github.com/01Joseph-Hwang10/dotty-dictionary/commit/74620c15c762d1bf04770d9e3a31261e1f65a9e5))
+
+
+### Documentation
+
+* add AUTHORS.md ([e6567a1](https://github.com/01Joseph-Hwang10/dotty-dictionary/commit/e6567a1ffa90a976272633410bacd768be37e20e))
+* add docstrings for example codes ([1a44552](https://github.com/01Joseph-Hwang10/dotty-dictionary/commit/1a44552380728107a55fdff9c8bd4892a3f605e0))
+
 ## [1.1.0](https://github.com/01Joseph-Hwang10/dotty-dictionary/compare/dotty-dictionary-v1.0.0...dotty-dictionary-v1.1.0) (2024-03-04)
 
 
