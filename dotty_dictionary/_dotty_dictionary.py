@@ -68,7 +68,7 @@ class Dotty:
         return iter(self._data)
 
     def __contains__(self, item):
-        def search_in(items: list, data: dict) -> bool:
+        def search_in(items: list[str], data: dict) -> bool:
             """Recursively search for deep key in dict.
 
             Parameters:
@@ -96,7 +96,7 @@ class Dotty:
         return search_in(self._split(item), self._data)
 
     def __getitem__(self, item):
-        def get_from(items: list, data: dict) -> Any:
+        def get_from(items: list[str], data: dict) -> Any:
             """Recursively get value from dictionary deep key.
 
             Parameters:
@@ -135,7 +135,7 @@ class Dotty:
         return get_from(self._split(item), self._data)
 
     def __setitem__(self, key, value):
-        def set_to(items: list, data: dict):
+        def set_to(items: list[str], data: dict):
             """Recursively set value to dictionary deep key.
 
             Parameters:
@@ -171,7 +171,7 @@ class Dotty:
         set_to(self._split(key), self._data)
 
     def __delitem__(self, key):
-        def del_key(items: list, data: dict):
+        def del_key(items: list[str], data: dict):
             """Recursively remove deep key from dict.
 
             Parameters:
@@ -318,7 +318,7 @@ class Dotty:
             KeyError: If key does not exist and default has not been provided
         """
 
-        def pop_from(items: list, data: dict):
+        def pop_from(items: list[str], data: dict):
             it = items.pop(0)
             if it not in data:
                 return default
