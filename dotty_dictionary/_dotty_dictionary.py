@@ -78,9 +78,9 @@ class Dotty:
             Returns:
                 bool: Predicate of key existence
             """
-            it = items.pop(0)
-            if it.isdigit():
-                idx = int(it)
+            key = items.pop(0)
+            if key.isdigit():
+                idx = int(key)
                 if idx < len(data):
                     if items:
                         return search_in(items, data[idx])
@@ -89,9 +89,9 @@ class Dotty:
                 else:
                     return False
 
-            if items and it in data:
-                return search_in(items, data[it])
-            return it in data
+            if items and key in data:
+                return search_in(items, data[key])
+            return key in data
 
         return search_in(self._split(item), self._data)
 
@@ -109,24 +109,24 @@ class Dotty:
             Raises:
                 KeyError: If key does not exist
             """
-            it = items.pop(0)
-            if isinstance(data, list) and it.isdigit() and not self.no_list:
-                it = int(it)
-            elif it not in data and isinstance(data, dict):
-                it = self._find_data_type(it, data)
-            elif isinstance(data, list) and ":" in it and not self.no_list:
+            key = items.pop(0)
+            if isinstance(data, list) and key.isdigit() and not self.no_list:
+                key = int(key)
+            elif key not in data and isinstance(data, dict):
+                key = self._find_data_type(key, data)
+            elif isinstance(data, list) and ":" in key and not self.no_list:
                 # TODO: fix C417 Unnecessary use of map - use a generator expression instead.
                 list_slice = slice(
-                    *map(lambda x: None if x == "" else int(x), it.split(":"))
+                    *map(lambda x: None if x == "" else int(x), key.split(":"))
                 )  # noqa: C417
                 if items:
                     return [get_from(items.copy(), x) for x in data[list_slice]]
                 else:
                     return data[list_slice]
             try:
-                data = data[it]
+                data = data[key]
             except TypeError:
-                raise KeyError("List index must be an integer, got {}".format(it))
+                raise KeyError("List index must be an integer, got {}".format(key))
             if items and data is not None:
                 return get_from(items, data)
             else:
@@ -142,31 +142,31 @@ class Dotty:
                 items: List of dictionary keys
                 data: Portion of dictionary to operate on
             """
-            it = items.pop(0)
+            key = items.pop(0)
             if items:
                 if items[0].isdigit():
                     next_item = []
                 else:
                     next_item = {}
 
-                if it.isdigit():
-                    it = int(it)
+                if key.isdigit():
+                    key = int(key)
                     try:
-                        if not data[it]:
-                            data[it] = next_item
+                        if not data[key]:
+                            data[key] = next_item
                     except IndexError:
-                        self.set_list_index(data, it, next_item)
-                    set_to(items, data[it])
+                        self.set_list_index(data, key, next_item)
+                    set_to(items, data[key])
                 else:
-                    if not data.get(it):
-                        data[it] = next_item
-                    set_to(items, data[it])
+                    if not data.get(key):
+                        data[key] = next_item
+                    set_to(items, data[key])
 
             else:
-                if it.isdigit():
-                    self.set_list_index(data, it, value)
+                if key.isdigit():
+                    self.set_list_index(data, key, value)
                 else:
-                    data[it] = value
+                    data[key] = value
 
         set_to(self._split(key), self._data)
 
@@ -181,13 +181,13 @@ class Dotty:
             Raises:
                 KeyError: If key does not exist
             """
-            it = items.pop(0)
-            if it.isdigit():
-                it = int(it)
+            key = items.pop(0)
+            if key.isdigit():
+                key = int(key)
             if items:
-                del_key(items, data[it])
+                del_key(items, data[key])
             else:
-                del data[it]
+                del data[key]
 
         del_key(self._split(key), self._data)
 
@@ -318,15 +318,15 @@ class Dotty:
             KeyError: If key does not exist and default has not been provided
         """
 
-        def pop_from(items: list[str], data: dict):
-            it = items.pop(0)
-            if it not in data:
+        def pop_from(items: list, data: dict):
+            key = items.pop(0)
+            if key not in data:
                 return default
             if items:
-                data = data[it]
+                data = data[key]
                 return pop_from(items, data)
             else:
-                return data.pop(it, default)
+                return data.pop(key, default)
 
         return pop_from(self._split(key), self._data)
 
