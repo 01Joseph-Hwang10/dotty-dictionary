@@ -1,6 +1,7 @@
 import json
+from copy import deepcopy
 from typing import Any, Iterable
-from ._dotty_encoder import DottyEncoder
+from collections.abc import Mapping, Sequence
 
 __authors__ = ["Joseph Hwang", "Pawel Zadrozny"]
 __copyright__ = "Copyright (c) 2024, Joseph Hwang. Originally written by Pawel Zadrozny"
@@ -24,29 +25,68 @@ class Dotty:
         dictionary (Any): Any dictionary or dict-like object
         separator (str): Character used to chain deep access.
         esc_char (str): Escape character for separator.
-        no_list (bool): If set to True then numeric keys will NOT be converted to list indices
+        no_list (bool): If set to True then numeric keys will NOT be converted to list indices.
+        mapping_types (list[type]): List of types that should be treated as mapping.
+        sequence_types (list[type]): List of types that should be treated as sequence.
+                                     If this option is set, then `no_list`_ is ignored.
+        json_encoder (type): Custom JSON encoder class.
+                             If not set, then `DottyEncoder`_ is used.
     """
 
     def __init__(
         self,
-        dictionary: dict[str, Any],
-        separator: str = ".",
-        esc_char: str = "\\",
-        no_list: bool = False,
+        dictionary: Mapping = None,
+        separator: str = None,
+        esc_char: str = None,
+        no_list: bool = None,
+        mapping_types: tuple[type] = None,
+        sequence_types: tuple[type] = None,
+        json_encoder: type = None,
     ):
-        if not isinstance(dictionary, dict):
-            raise AttributeError("Dictionary must be type of dict")
-        else:
-            self._data: dict[str, Any] = dictionary
+        # Set default values
+        dictionary = dictionary or {}
+        separator = separator or "."
+        esc_char = esc_char or "\\"
+        mapping_types = mapping_types or tuple([dict])
+        sequence_types = sequence_types or tuple([list]) if not no_list else tuple()
+        json_encoder = json_encoder or DottyEncoder
+
+        # Validate arguments
+        if not isinstance(mapping_types, tuple):
+            raise AttributeError("`mapping_types` must be type of tuple")
+        for mapping_type in mapping_types:
+            if not issubclass(mapping_type, Mapping):
+                raise AttributeError(
+                    "Elements of `mapping_types` should inherit `Mapping`, "
+                    f"but {mapping_type} does not inherits `Mapping`."
+                )
+
+        if not isinstance(sequence_types, tuple):
+            raise AttributeError("`sequence_types` must be type of tuple")
+        for sequence_type in sequence_types:
+            if not issubclass(sequence_type, Sequence):
+                raise AttributeError(
+                    "Elements of `sequence_types` should inherit `Sequence`, "
+                    f"but {sequence_type} does not inherits `Sequence`."
+                )
+
+        if not isinstance(dictionary, mapping_types):
+            raise AttributeError("`dictionary` must be type of Mapping")
+
+        self._data: Mapping = dictionary
         self.separator = separator
         self.esc_char = esc_char
-        self.no_list = no_list
+        self.mapping_types = mapping_types
+        self.sequence_types = sequence_types
+        self.json_encoder = json_encoder
 
     def __repr__(self):
         return (
             f"Dotty(dictionary={self._data}), "
             f"separator={repr(self.separator)}, "
-            f"esc_char={repr(self.esc_char)})"
+            f"esc_char={repr(self.esc_char)}), "
+            f"mapping_types={repr(self.mapping_types)}, "
+            f"sequence_types={repr(self.sequence_types)})"
         )
 
     def __str__(self):
@@ -55,7 +95,7 @@ class Dotty:
     def __hash__(self):
         return hash(str(self))
 
-    def __eq__(self, other: dict):
+    def __eq__(self, other: Mapping):
         try:
             return sorted(self._data.items()) == sorted(other.items())
         except AttributeError:
@@ -68,7 +108,7 @@ class Dotty:
         return iter(self._data)
 
     def __contains__(self, item):
-        def search_in(items: list[str], data: dict) -> bool:
+        def search_in(items: list[str], data: Mapping) -> bool:
             """Recursively search for deep key in dict.
 
             Parameters:
@@ -96,7 +136,7 @@ class Dotty:
         return search_in(self._split(item), self._data)
 
     def __getitem__(self, item):
-        def get_from(items: list[str], data: dict) -> Any:
+        def get_from(items: list[str], data: Mapping) -> Any:
             """Recursively get value from dictionary deep key.
 
             Parameters:
@@ -110,15 +150,14 @@ class Dotty:
                 KeyError: If key does not exist
             """
             key = items.pop(0)
-            if isinstance(data, list) and key.isdigit() and not self.no_list:
+            if isinstance(data, self.sequence_types) and key.isdigit():
                 key = int(key)
-            elif key not in data and isinstance(data, dict):
+            elif key not in data and isinstance(data, self.mapping_types):
                 key = self._find_data_type(key, data)
-            elif isinstance(data, list) and ":" in key and not self.no_list:
-                # TODO: fix C417 Unnecessary use of map - use a generator expression instead.
+            elif isinstance(data, self.sequence_types) and ":" in key:
                 list_slice = slice(
-                    *map(lambda x: None if x == "" else int(x), key.split(":"))
-                )  # noqa: C417
+                    *(None if x == "" else int(x) for x in key.split(":"))
+                )
                 if items:
                     return [get_from(items.copy(), x) for x in data[list_slice]]
                 else:
@@ -126,7 +165,7 @@ class Dotty:
             try:
                 data = data[key]
             except TypeError:
-                raise KeyError("List index must be an integer, got {}".format(key))
+                raise KeyError(f"List index must be an integer, got {key}")
             if items and data is not None:
                 return get_from(items, data)
             else:
@@ -135,7 +174,7 @@ class Dotty:
         return get_from(self._split(item), self._data)
 
     def __setitem__(self, key, value):
-        def set_to(items: list[str], data: dict):
+        def set_to(items: list[str], data: Mapping):
             """Recursively set value to dictionary deep key.
 
             Parameters:
@@ -171,7 +210,7 @@ class Dotty:
         set_to(self._split(key), self._data)
 
     def __delitem__(self, key):
-        def del_key(items: list[str], data: dict):
+        def del_key(items: list[str], data: Mapping):
             """Recursively remove deep key from dict.
 
             Parameters:
@@ -198,10 +237,11 @@ class Dotty:
             Shallow copy of wrapped dictionary
         """
         return Dotty(
-            self._data.copy(),
-            self.separator,
-            self.esc_char,
-            self.no_list,
+            deepcopy(self._data),
+            separator=self.separator,
+            esc_char=self.esc_char,
+            mapping_types=self.mapping_types,
+            sequence_types=self.sequence_types,
         )
 
     @staticmethod
@@ -214,7 +254,7 @@ class Dotty:
         return Dotty({}, *args, **kwargs)
 
     @staticmethod
-    def from_flat_dict(data: dict, *args, **kwargs) -> "Dotty":
+    def from_flat_dict(data: Mapping, *args, **kwargs) -> "Dotty":
         """Create Dotty instance from flat dictionary.
 
         Parameters:
@@ -318,7 +358,7 @@ class Dotty:
             KeyError: If key does not exist and default has not been provided
         """
 
-        def pop_from(items: list, data: dict):
+        def pop_from(items: list, data: Mapping):
             key = items.pop(0)
             if key not in data:
                 return default
@@ -360,27 +400,39 @@ class Dotty:
         """
         return json.loads(self.to_json())
 
-    def to_flat_dict(self, no_list: bool | None = None) -> dict:
+    def to_flat_dict(
+        self,
+        no_list: bool = None,
+        mapping_types: list[type] = None,
+        sequence_types: list[type] = None,
+    ) -> dict:
         """Return wrapped dictionary as flat dictionary.
 
         Parameters:
-            no_list: If set to True then numeric keys will NOT be converted to list indices
-                     In other words, list values will be given as is.
-                     Defaults to the value set in the constructor.
+            no_list: If set to True then numeric keys will NOT be converted to list indices.
+                     If this option is set, then instance property `sequence_types`_ is ignored.
+            mapping_types: List of types that are considered as mapping types.
+                           If this option is set, then `no_list`_ and
+                           instance property `mapping_types`_ are ignored.
+            sequence_types: List of types that are considered as sequence types.
+                            If this option is set, then `no_list`_ and
+                            instance property `sequence_types`_ are ignored.
 
         Returns:
             Wrapped dictionary as flat dictionary
         """
-        if no_list is None:
-            no_list = self.no_list
+        mapping_types = mapping_types or self.mapping_types
+        sequence_types = (
+            sequence_types or self.sequence_types if not no_list else tuple()
+        )
 
-        def flatten(d: dict, parent_key: str = ""):
+        def flatten(d: Mapping, parent_key: str = ""):
             items = []
             for k, v in d.items():
                 new_key = f"{parent_key}{self.separator}{k}" if parent_key else k
-                if isinstance(v, dict):
+                if isinstance(v, mapping_types):
                     items.extend(flatten(v, new_key).items())
-                elif isinstance(v, list) and not no_list:
+                elif isinstance(v, sequence_types):
                     for i, item in enumerate(v):
                         items.extend(flatten({str(i): item}, new_key).items())
                 else:
@@ -389,18 +441,17 @@ class Dotty:
 
         return flatten(self.to_dict())
 
-    def to_flat_json(self, no_list: bool | None = None) -> str:
+    def to_flat_json(self, *args, **kwargs) -> str:
         """Return wrapped dictionary as flat json string.
 
         Parameters:
-            no_list: If set to True then numeric keys will NOT be converted to list indices
-                     In other words, list values will be given as is.
-                     Defaults to the value set in the constructor.
+            *args: Arguments of `to_flat_dict`_.
+            **kwargs: Keyword arguments of `to_flat_dict`_.
 
         Returns:
             Wrapped dictionary as flat json string
         """
-        return json.dumps(self.to_flat_dict(no_list), cls=DottyEncoder)
+        return json.dumps(self.to_flat_dict(*args, **kwargs))
 
     def to_json(self) -> str:
         """Return wrapped dictionary as json string.
@@ -410,9 +461,9 @@ class Dotty:
         Returns:
             Wrapped dictionary as json string
         """
-        return json.dumps(self._data, cls=DottyEncoder)
+        return json.dumps(self._data, cls=self.json_encoder)
 
-    def update(self, data: dict[str, Any]):
+    def update(self, data: Mapping[str, Any]):
         self._data.update(data)
 
     def values(self):
@@ -424,7 +475,7 @@ class Dotty:
         return self._data.values()
 
     @staticmethod
-    def _find_data_type(item: Any, data: dict) -> Any:
+    def _find_data_type(item: Any, data: Mapping) -> Any:
         """This method returns item in datatype that exists in data dict.
 
         Method creates set of types present in dict keys
@@ -475,3 +526,21 @@ class Dotty:
             keys[i] = k.replace(*stamp_esc).replace(*stamp_skp)
 
         return keys
+
+
+class DottyEncoder(json.JSONEncoder):
+    """Helper class for encoding of nested Dotty dicts into standard dict"""
+
+    def default(self, obj: Any) -> Any:
+        """Return dict data of Dotty when possible or encode with standard format
+
+        Parameters:
+            obj: Input object
+
+        Returns:
+            Serializable data
+        """
+        if isinstance(obj, Dotty):
+            return obj._data
+        else:
+            return json.JSONEncoder.default(self, obj)

@@ -65,6 +65,13 @@ dot.get('very.not_existing.key')
 None
 ```
 
+More examples can be found in the [examples](https://github.com/01Joseph-Hwang10/dotty-dictionary/tree/master/examples) directory.
+
+> [!NOTE]\
+> Using integer in dictionary keys will be treated as embedded list index.
+
+## Flattening and Unflattening
+
 You can utilize `to_flat_dict` and `from_flat_dict` to convert dotty to and from flat dictionary.
 
 ```py
@@ -76,11 +83,6 @@ Dotty(dictionary={'very': {'deeply': {'nested': {'thing': 'spam'}, 'spam': 'inde
 dot.to_flat_dict()
 {'very.deeply.nested.thing': 'spam', 'very.deeply.spam': 'indeed'}
 ```
-
-More examples can be found in the [examples](https://github.com/01Joseph-Hwang10/dotty-dictionary/tree/master/examples) directory.
-
-> [!NOTE]\
-> Using integer in dictionary keys will be treated as embedded list index.
 
 
 ## Contributing

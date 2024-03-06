@@ -1,9 +1,9 @@
-from collections.abc import Mapping
+from collections.abc import MutableMapping
 from ._dotty_dictionary import Dotty
 
 
 def dotty(
-    dictionary: Mapping = None,
+    dictionary: MutableMapping = None,
     no_list: bool = False,
 ) -> Dotty:
     """Factory function for Dotty class.
@@ -17,6 +17,9 @@ def dotty(
     Returns:
         Dotty instance
     """
-    if dictionary is None:
-        dictionary = {}
-    return Dotty(dictionary, separator=".", esc_char="\\", no_list=no_list)
+    return Dotty(
+        dictionary,
+        separator=".",
+        esc_char="\\",
+        no_list=no_list,
+    )
