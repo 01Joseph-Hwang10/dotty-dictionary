@@ -124,6 +124,8 @@ class User(MutableMapping):
     name: str
     age: int
 
+    # Implementations are skipped for brevity
+
 class CustomJSONEncoder(DottyEncoder):
     def default(self, obj):
         if isinstance(obj, User):
