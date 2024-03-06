@@ -23,11 +23,14 @@ def api_request():
     Below there is example response as dictionary, and then the way to check granted privileges.
     """
 
-    def make_request(payload):
+    def make_request(payload: dict) -> dict:
         """Fake request for example purpose.
 
-        :param dict payload: Example payload
-        :return dict: Example response
+        Parameters:
+            payload: Example payload
+
+        Returns:
+            Example response
         """
         return {
             "status": {
