@@ -123,5 +123,20 @@ def test_dotty_del_custom_types(dot: Dotty):
     assert dot.get("h.name") is None
 
 
+def test_dotty_views_custom_types(dot: Dotty):
+    assert list(dot) == ["a", "g", "h"]
+    assert list(dot.keys()) == ["a", "g", "h"]
+    assert list(dot.values()) == [
+        dot["a"],
+        dot["g"],
+        dot["h"],
+    ]
+    assert list(dot.items()) == [
+        ("a", dot["a"]),
+        ("g", dot["g"]),
+        ("h", dot["h"]),
+    ]
+
+
 def test_dotty_to_dict(dot: Dotty, dot_serialized):
     assert dot.to_dict() == dot_serialized
