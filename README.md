@@ -38,7 +38,7 @@ pip install dotty-dictionary
 Create new dotty using factory function.
 
 ```py
-from dotty_dict import dotty
+from dotty_dictionary import dotty
 dot = dotty({'plain': {'old': {'python': 'dictionary'}}})
 dot['plain.old']
 {'python': 'dictionary'}
@@ -47,7 +47,7 @@ dot['plain.old']
 You can start with empty dotty
 
 ```py
-from dotty_dict import dotty
+from dotty_dictionary import dotty
 dot = dotty() # Alias: `Dotty.empty()`
 dot['very.deeply.nested.thing'] = 'spam'
 dot
@@ -75,7 +75,7 @@ More examples can be found in the [examples](https://github.com/01Joseph-Hwang10
 You can utilize `to_flat_dict` and `from_flat_dict` to convert dotty to and from flat dictionary.
 
 ```py
-from dotty_dict import Dotty
+from dotty_dictionary import Dotty
 dot = Dotty.from_flat_dict({'very.deeply.nested.thing': 'spam', 'very.deeply.spam': 'indeed'})
 dot
 Dotty(dictionary={'very': {'deeply': {'nested': {'thing': 'spam'}, 'spam': 'indeed'}}}, separator='.', esc_char='\\')
@@ -83,6 +83,55 @@ Dotty(dictionary={'very': {'deeply': {'nested': {'thing': 'spam'}, 'spam': 'inde
 dot.to_flat_dict()
 {'very.deeply.nested.thing': 'spam', 'very.deeply.spam': 'indeed'}
 ```
+
+## Custom Types && Encoders
+
+By default, `dotty-dictionary` only considers `dict` as a mapping type, and `list` as a sequence type and will provide a dot notation access for them. However, you can also provide custom types to be considered as mapping or sequence types.
+
+```py
+from collections.abc import MutableMapping
+from dataclasses import dataclass
+from dotty_dictionary import Dotty, DottyEncoder
+
+
+@dataclass
+class User(MutableMapping):
+    name: str
+    age: int
+
+class CustomJSONEncoder(DottyEncoder):
+    def default(self, obj):
+        if isinstance(obj, User):
+            return {"name": obj.name, "age": obj.age}
+        return super().default(obj)
+
+dictionary = {
+    "a": { 
+        "b": { "c": 1, "d": 2 },
+        "e": (3, {"f": 4}, (5, 6, 7)), # Has Tuple
+    },
+    "g": 8,
+    "h": User(name="John", age=25), # Has Custom Dataclass
+}
+dot = Dotty(
+    dictionary,
+    mapping_types=(dict, User),
+    sequence_types=(list, tuple),
+    json_encoder=CustomJSONEncoder,
+)
+
+dot["a.e.1.f"]
+4
+
+dot["h.name"]
+"John"
+
+dot["h.age"] = 26
+dot["h.age"]
+26
+```
+
+Full example can be found on [tests/test_dotty_custom_types.py](https://github.com/01Joseph-Hwang10/dotty-dictionary/tree/master/tests/test_dotty_custom_types.py)
 
 
 ## Contributing
