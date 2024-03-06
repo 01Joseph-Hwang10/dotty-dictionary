@@ -158,39 +158,9 @@ dot["h.age"]
 
 Full example can be found on [tests/test_dotty_custom_types.py](https://github.com/01Joseph-Hwang10/dotty-dictionary/tree/master/tests/test_dotty_custom_types.py)
 
-## Quick Examples
+## More Examples
 
-Create new dotty using factory function.
-
-```py
-from dotty_dictionary import dotty
-dot = dotty({'plain': {'old': {'python': 'dictionary'}}})
-dot['plain.old']
-{'python': 'dictionary'}
-```
-
-You can start with empty dotty
-
-```py
-from dotty_dictionary import dotty
-dot = dotty()
-dot['very.deeply.nested.thing'] = 'spam'
-dot
-Dotty(dictionary={'very': {'deeply': {'nested': {'thing': 'spam'}}}}, separator='.', esc_char='\\')
-
-dot['very.deeply.spam'] = 'indeed'
-dot
-Dotty(dictionary={'very': {'deeply': {'nested': {'thing': 'spam'}, 'spam': 'indeed'}}}, separator='.', esc_char='\\')
-
-del dot['very.deeply.nested']
-dot
-Dotty(dictionary={'very': {'deeply': {'spam': 'indeed'}}}, separator='.', esc_char='\\')
-
-dot.get('very.not_existing.key')
-None
-```
-
-More examples can be found in the [examples](https://github.com/01Joseph-Hwang10/dotty-dictionary/tree/master/examples) directory.
+More examples can be found in the [examples](https://github.com/01Joseph-Hwang10/dotty-dictionary/tree/master/examples) and [tests](https://github.com/01Joseph-Hwang10/dotty-dictionary/tree/master/tests) directory.
 
 ## Contributing
 
