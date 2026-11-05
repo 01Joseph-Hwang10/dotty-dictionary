@@ -3,6 +3,7 @@ resource "github_repository" "dotty_dictionary" {
   visibility   = "public"
   homepage_url = "https://pypi.org/project/dotty-dictionary/"
   topics = [
+    "python",
     "nested-dictionary",
     "dot-notation",
     "utility",
@@ -27,10 +28,4 @@ resource "github_actions_secret" "pypi_password" {
   repository      = github_repository.dotty_dictionary.name
   secret_name     = "PYPI_PASSWORD"
   plaintext_value = var.pypi_password
-}
-
-resource "github_actions_secret" "github_pat" {
-  repository      = github_repository.dotty_dictionary.name
-  secret_name     = "GH_PAT"
-  plaintext_value = var.github_pat
 }
