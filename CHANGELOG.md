@@ -1,5 +1,19 @@
 # Changelog
 
+## [1.2.1](https://github.com/01Joseph-Hwang10/dotty-dictionary/compare/dotty-dictionary-v1.2.0...dotty-dictionary-v1.2.1) (2026-11-05)
+
+
+### Bug Fixes
+
+* publish inline types with a PEP 561 marker (fix [#6](https://github.com/01Joseph-Hwang10/dotty-dictionary/issues/6)) ([#7](https://github.com/01Joseph-Hwang10/dotty-dictionary/issues/7)) ([7e22cc1](https://github.com/01Joseph-Hwang10/dotty-dictionary/commit/7e22cc1f97ed9030c3e3ec5fdc18e78bee40b5ff))
+
+
+### Documentation
+
+* add docs for new features ([4b075ef](https://github.com/01Joseph-Hwang10/dotty-dictionary/commit/4b075ef283b26ee639feaebb8d8ed6096707b3f8))
+* add docs for new features ([4cdd4c9](https://github.com/01Joseph-Hwang10/dotty-dictionary/commit/4cdd4c9c8cd85fb7ac4da0618aafded341c0f5c2))
+* add docs for new features ([22f8f1c](https://github.com/01Joseph-Hwang10/dotty-dictionary/commit/22f8f1cf9c7bc2d4c667356fe7921f7d9e21bef6))
+
 ## [1.2.0](https://github.com/01Joseph-Hwang10/dotty-dictionary/compare/dotty-dictionary-v1.1.1...dotty-dictionary-v1.2.0) (2024-03-06)
 
 
